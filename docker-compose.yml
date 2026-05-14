@@ -1,0 +1,27 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: sre-task-postgres
+    environment:
+      POSTGRES_DB: sre_task_db
+      POSTGRES_USER: sre_user
+      POSTGRES_PASSWORD: sre_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: sre-task-api
+    depends_on:
+      - postgres
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/sre_task_db
+      SPRING_DATASOURCE_USERNAME: sre_user
+      SPRING_DATASOURCE_PASSWORD: sre_password
+    ports:
+      - "8080:8080"
+
+volumes:
+  postgres_data:
