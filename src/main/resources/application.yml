@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: sre-task-api
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/sre_task_db
+    username: sre_user
+    password: sre_password
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: always
+
+logging:
+  level:
+    root: INFO
+    com.example.sretaskapi: DEBUG
