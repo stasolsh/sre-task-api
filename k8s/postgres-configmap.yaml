@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  namespace: sre-task-api
+data:
+  POSTGRES_DB: sre_task_db
