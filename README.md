@@ -298,6 +298,17 @@ jvm_memory_used_bytes
 process_cpu_usage
 ```
 
+## Active DB Connections
+
+```promql
+hikaricp_connections_active
+```
+
+## Pending DB Connections
+
+```promql
+hikaricp_connections_pending
+```
 ---
 
 # Grafana
@@ -326,12 +337,21 @@ http://prometheus:9090
 
 Configured Prometheus alerts:
 
-| Alert              | Description             |
-| ------------------ | ----------------------- |
-| SreTaskApiDown     | Application unavailable |
-| HighHttpErrorRate  | HTTP 5xx errors > 5%    |
-| HighP95Latency     | p95 latency > 500ms     |
-| HighJvmMemoryUsage | JVM heap usage > 80%    |
+| Alert                       | Severity | Description                     |
+| --------------------------- | -------- | ------------------------------- |
+| SreTaskApiDown              | critical | Application unavailable         |
+| HighHttpErrorRate           | warning  | HTTP 5xx errors > 5%            |
+| TooMany4xxErrors            | warning  | HTTP 4xx errors > 20%           |
+| HighP95Latency              | warning  | p95 latency > 500ms             |
+| HighJvmMemoryUsage          | warning  | JVM heap usage > 80%            |
+| HighJvmThreadCount          | warning  | JVM thread count > 100          |
+| HighDatabaseConnectionUsage | warning  | HikariCP usage > 80%            |
+| PendingDatabaseConnections  | critical | Waiting DB connections detected |
+| HighGcActivity              | warning  | Frequent JVM GC activity        |
+| HighRequestRate             | info     | Request rate > 20 req/sec       |
+| NoHttpTraffic               | warning  | No traffic for 10 minutes       |
+| AppInstanceRestarted        | warning  | Application restarted recently  |
+
 
 Open alerts page:
 
