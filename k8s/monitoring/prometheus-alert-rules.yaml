@@ -55,3 +55,83 @@ data:
             annotations:
               summary: "High JVM heap memory usage"
               description: "JVM heap usage is above 80%."
+              
+          - alert: NoHttpTraffic
+            expr: sum(rate(http_server_requests_seconds_count[5m])) == 0
+            for: 10m
+            labels:
+              severity: warning
+            annotations:
+              summary: "No HTTP traffic"
+              description: "sre-task-api has received no HTTP traffic for 10 minutes."
+          
+          - alert: HighRequestRate
+            expr: sum(rate(http_server_requests_seconds_count[1m])) > 20
+            for: 5m
+            labels:
+              severity: info
+            annotations:
+              summary: "High request rate"
+              description: "Request rate is higher than 20 requests per second."
+                
+          - alert: TooMany4xxErrors
+            expr: |
+              sum(rate(http_server_requests_seconds_count{status=~"4.."}[5m]))
+              /
+              sum(rate(http_server_requests_seconds_count[5m]))
+              > 0.20
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: "High HTTP 4xx error rate"
+              description: "More than 20% of requests are client errors."
+                
+          - alert: HighJvmThreadCount
+            expr: jvm_threads_live_threads > 100
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: "High JVM thread count"
+              description: "JVM live thread count is above 100."
+                
+          - alert: HighDatabaseConnectionUsage
+            expr: |
+              hikaricp_connections_active
+              /
+              hikaricp_connections_max
+              > 0.80
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: "High database connection usage"
+              description: "More than 80% of HikariCP DB connections are active."
+                
+          - alert: PendingDatabaseConnections
+            expr: hikaricp_connections_pending > 0
+            for: 2m
+            labels:
+              severity: critical
+            annotations:
+              summary: "Pending database connections"
+              description: "Application has pending database connection requests."
+                
+          - alert: HighGcActivity
+            expr: rate(jvm_gc_pause_seconds_count[5m]) > 1
+            for: 5m
+            labels:
+              severity: warning
+            annotations:
+              summary: "High JVM GC activity"
+              description: "JVM garbage collection is happening frequently."
+                
+          - alert: AppInstanceRestarted
+            expr: process_uptime_seconds < 60
+            for: 1m
+            labels:
+              severity: warning
+            annotations:
+              summary: "Application instance recently restarted"
+              description: "sre-task-api process uptime is less than 60 seconds."
